@@ -2,7 +2,7 @@
 [![docs.rs version](https://img.shields.io/docsrs/portable_atomic_enum)](https://docs.rs/atomic_enum/latest/portable_atomic_enum/)
 # portable_atomic_enum
 
-This crate is a fork of [atomic_enum](https://github.com/brain0/atomic_enum) that uses
+This crate is a fork of [atomic_enum](https://github.com/brain0/atomic_enum) and uses
 `portable-atomic` to support more targets.
 
 An attribute to create an atomic wrapper around a C-style enum.
