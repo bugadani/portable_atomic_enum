@@ -1,6 +1,9 @@
-[![cargo version](https://img.shields.io/crates/v/atomic_enum.svg)](https://crates.io/crates/atomic_enum) 
-[![docs.rs version](https://img.shields.io/docsrs/atomic_enum)](https://docs.rs/atomic_enum/latest/atomic_enum/)
-# atomic_enum
+[![cargo version](https://img.shields.io/crates/v/portable_atomic_enum.svg)](https://crates.io/crates/portable_atomic_enum) 
+[![docs.rs version](https://img.shields.io/docsrs/portable_atomic_enum)](https://docs.rs/atomic_enum/latest/portable_atomic_enum/)
+# portable_atomic_enum
+
+This crate is a fork of [atomic_enum](https://github.com/brain0/atomic_enum) that uses
+`portable-atomic` to support more targets.
 
 An attribute to create an atomic wrapper around a C-style enum.
 
@@ -28,6 +31,3 @@ assert_eq!(state.load(Ordering::Relaxed), CatState::Alive);
 This attribute does not use or generate any unsafe code.
 
 The crate can be used in a `#[no_std]` environment.
-
-# Maintenance Note
-This crate is passively maintained.
