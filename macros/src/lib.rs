@@ -59,7 +59,6 @@ fn enum_definition<'a>(
 
     quote! {
         #(#attrs)*
-        #[derive(Debug, Clone, Copy)]
         #vis enum #ident {
             #( #variants ),*
         }

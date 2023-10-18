@@ -8,7 +8,7 @@ use core::sync::atomic::Ordering;
 use portable_atomic_enum::atomic_enum;
 
 #[atomic_enum]
-#[derive(PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum FooBar {
     Foo,
     Bar,
