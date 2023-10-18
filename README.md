@@ -16,7 +16,7 @@ of `AtomicUsize`.
 # use atomic_enum::atomic_enum;
 # use std::sync::atomic::Ordering;
 #[atomic_enum]
-#[derive(PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 enum CatState {
     Dead = 0,
     BothDeadAndAlive,
