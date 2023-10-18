@@ -23,7 +23,7 @@
 //! # Example
 //!
 //! ```
-//! # use atomic_enum::atomic_enum;
+//! # use portable_atomic_enum::atomic_enum;
 //! # use std::sync::atomic::Ordering;
 //! #[atomic_enum]
 //! #[derive(PartialEq)]
@@ -78,7 +78,7 @@ This type uses an `AtomicUsize` to store the enum value.
 
     quote! {
         #[doc = #atomic_ident_docs]
-        #vis struct #atomic_ident(core::sync::atomic::AtomicUsize);
+        #vis struct #atomic_ident(portable_atomic::AtomicUsize);
     }
 }
 
@@ -132,7 +132,7 @@ fn atomic_enum_new(ident: &Ident, atomic_ident: &Ident) -> TokenStream2 {
     quote! {
         #[doc = #atomic_ident_docs]
         pub const fn new(v: #ident) -> #atomic_ident {
-            #atomic_ident(core::sync::atomic::AtomicUsize::new(Self::to_usize(v)))
+            #atomic_ident(portable_atomic::AtomicUsize::new(Self::to_usize(v)))
         }
     }
 }
@@ -222,33 +222,6 @@ fn atomic_enum_swap(ident: &Ident) -> TokenStream2 {
         /// and using `Release` makes the load part `Relaxed`.
         pub fn swap(&self, val: #ident, order: core::sync::atomic::Ordering) -> #ident {
             Self::from_usize(self.0.swap(Self::to_usize(val), order))
-        }
-    }
-}
-
-fn atomic_enum_compare_and_swap(ident: &Ident) -> TokenStream2 {
-    quote! {
-        /// Stores a value into the atomic if the current value is the same as the `current` value.
-        ///
-        /// The return value is always the previous value. If it is equal to `current`, then the value was updated.
-        ///
-        /// `compare_and_swap` also takes an `Ordering` argument which describes the memory ordering of this operation.
-        /// Notice that even when using `AcqRel`, the operation might fail and hence just perform an `Acquire` load, but
-        /// not have `Release` semantics. Using `Acquire` makes the store part of this operation `Relaxed` if it happens,
-        /// and using `Release` makes the load part `Relaxed`.
-        #[allow(deprecated)]
-        #[deprecated(note = "Use `compare_exchange` or `compare_exchange_weak` instead")]
-        pub fn compare_and_swap(
-            &self,
-            current: #ident,
-            new: #ident,
-            order: core::sync::atomic::Ordering
-        ) -> #ident {
-            Self::from_usize(self.0.compare_and_swap(
-                Self::to_usize(current),
-                Self::to_usize(new),
-                order
-            ))
         }
     }
 }
@@ -350,7 +323,7 @@ fn debug_impl(atomic_ident: &Ident) -> TokenStream2 {
 /// `Atomic`.
 ///
 /// ```
-/// # use atomic_enum::atomic_enum;
+/// # use portable_atomic_enum::atomic_enum;
 /// #[atomic_enum]
 /// enum State {
 ///     On,
@@ -364,7 +337,7 @@ fn debug_impl(atomic_ident: &Ident) -> TokenStream2 {
 /// as an argument to the attribute.
 ///
 /// ```
-/// # use atomic_enum::atomic_enum;
+/// # use portable_atomic_enum::atomic_enum;
 /// #[atomic_enum(StateAtomic)]
 /// enum State {
 ///     On,
@@ -419,7 +392,6 @@ pub fn atomic_enum(args: TokenStream, input: TokenStream) -> TokenStream {
     let atomic_enum_load = atomic_enum_load(&ident);
     let atomic_enum_store = atomic_enum_store(&ident);
     let atomic_enum_swap = atomic_enum_swap(&ident);
-    let atomic_enum_compare_and_swap = atomic_enum_compare_and_swap(&ident);
     let atomic_enum_compare_exchange = atomic_enum_compare_exchange(&ident);
     let atomic_enum_compare_exchange_weak = atomic_enum_compare_exchange_weak(&ident);
 
@@ -435,7 +407,6 @@ pub fn atomic_enum(args: TokenStream, input: TokenStream) -> TokenStream {
             #atomic_enum_load
             #atomic_enum_store
             #atomic_enum_swap
-            #atomic_enum_compare_and_swap
             #atomic_enum_compare_exchange
             #atomic_enum_compare_exchange_weak
         }
