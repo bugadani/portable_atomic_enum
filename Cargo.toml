@@ -1,7 +1,7 @@
 [package]
 name = "portable_atomic_enum"
 version = "0.1.0"
-authors = ["Thomas Bächler <thomas.baechler@gmx.de>"]
+authors = ["Thomas Bächler <thomas.baechler@gmx.de>", "Dániel Buga <bugadani@gmail.com>"]
 edition = "2021"
 
 description = "An attribute to create an portable atomic wrapper around a C-style enum"
