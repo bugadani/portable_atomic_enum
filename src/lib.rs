@@ -18,4 +18,6 @@
 //! assert_eq!(state.load(Ordering::Relaxed), CatState::Alive);
 //! ```
 
+#![no_std]
+
 pub use portable_atomic_enum_macros::atomic_enum;
