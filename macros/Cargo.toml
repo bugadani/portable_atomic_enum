@@ -1,6 +1,6 @@
 [package]
 name = "portable_atomic_enum_macros"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Thomas Bächler <thomas.baechler@gmx.de>", "Dániel Buga <bugadani@gmail.com>"]
 edition = "2021"
 

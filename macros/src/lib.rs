@@ -77,7 +77,7 @@ This type uses an `AtomicUsize` to store the enum value.
 
     quote! {
         #[doc = #atomic_ident_docs]
-        #vis struct #atomic_ident(portable_atomic::AtomicUsize);
+        #vis struct #atomic_ident(portable_atomic_enum::portable_atomic::AtomicUsize);
     }
 }
 
@@ -131,7 +131,7 @@ fn atomic_enum_new(ident: &Ident, atomic_ident: &Ident) -> TokenStream2 {
     quote! {
         #[doc = #atomic_ident_docs]
         pub const fn new(v: #ident) -> #atomic_ident {
-            #atomic_ident(portable_atomic::AtomicUsize::new(Self::to_usize(v)))
+            #atomic_ident(portable_atomic_enum::portable_atomic::AtomicUsize::new(Self::to_usize(v)))
         }
     }
 }
