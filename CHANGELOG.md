@@ -1,3 +1,8 @@
+# 0.2.0 - 2023-11-13
+====================
+
+- Update portable-atomic to 1.5 and disable default features
+
 # 0.1.2 - 2023-10-18
 ====================
 

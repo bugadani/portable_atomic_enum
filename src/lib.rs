@@ -3,8 +3,9 @@
 //! # Example
 //!
 //! ```rust
-//! # use atomic_enum::atomic_enum;
+//! # use portable_atomic_enum::atomic_enum;
 //! # use std::sync::atomic::Ordering;
+//!
 //! #[atomic_enum]
 //! #[derive(Clone, Copy, Debug, PartialEq)]
 //! enum CatState {

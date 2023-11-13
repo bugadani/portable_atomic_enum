@@ -17,5 +17,5 @@ members = [
 ]
 
 [dependencies]
-portable-atomic = "1.4"
+portable-atomic = { version = "1.5", default-features = false }
 portable_atomic_enum_macros = { version = "0.1.2", path = "./macros" }
