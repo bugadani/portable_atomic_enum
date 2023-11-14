@@ -21,5 +21,5 @@
 
 #![no_std]
 
-pub use portable_atomic;
+pub use portable_atomic as atomic;
 pub use portable_atomic_enum_macros::atomic_enum;
