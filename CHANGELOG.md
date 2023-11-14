@@ -1,3 +1,8 @@
+# 0.3.0 - 2023-11-14
+====================
+
+- New: `portable-atomic` feature. Without this feature, `portable_atomic_enum` will use types from `core::sync::atomic`.
+
 # 0.2.0 - 2023-11-13
 ====================
 

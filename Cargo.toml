@@ -1,6 +1,6 @@
 [package]
 name = "portable_atomic_enum"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Thomas Bächler <thomas.baechler@gmx.de>", "Dániel Buga <bugadani@gmail.com>"]
 edition = "2021"
 
@@ -17,5 +17,8 @@ members = [
 ]
 
 [dependencies]
-portable-atomic = { version = "1.5", default-features = false }
-portable_atomic_enum_macros = { version = "0.1.2", path = "./macros" }
+portable-atomic = { version = "1.5", default-features = false, optional = true }
+portable_atomic_enum_macros = { version = "0.2.0", path = "./macros" }
+
+[features]
+portable-atomic = ["dep:portable-atomic"]

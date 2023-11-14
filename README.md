@@ -2,7 +2,7 @@
 [![docs.rs version](https://img.shields.io/docsrs/portable_atomic_enum)](https://docs.rs/atomic_enum/latest/portable_atomic_enum/)
 # portable_atomic_enum
 
-This crate is a fork of [atomic_enum](https://github.com/brain0/atomic_enum) and uses
+This crate is a fork of [atomic_enum](https://github.com/brain0/atomic_enum) and optionally uses
 `portable-atomic` to support more targets.
 
 An attribute to create an atomic wrapper around a C-style enum.
@@ -31,3 +31,7 @@ assert_eq!(state.load(Ordering::Relaxed), CatState::Alive);
 This attribute does not use or generate any unsafe code.
 
 The crate can be used in a `#[no_std]` environment.
+
+## Cargo features
+
+- `portable-atomic`: polyfill atomic types using `portable-atomic`
