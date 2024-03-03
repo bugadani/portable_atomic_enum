@@ -1,3 +1,10 @@
+# 0.3.1 - TBD
+====================
+
+- Pulled in upstream changes:
+  - Fixed conflicts around the `core` module and `Result` types.
+  - Fixed using conflicting `fmt` function.
+
 # 0.3.0 - 2023-11-14
 ====================
 

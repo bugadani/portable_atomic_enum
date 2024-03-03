@@ -191,7 +191,7 @@ fn atomic_enum_load(ident: &Ident) -> TokenStream2 {
         /// # Panics
         ///
         /// Panics if order is `Release` or `AcqRel`.
-        pub fn load(&self, order: core::sync::atomic::Ordering) -> #ident {
+        pub fn load(&self, order: ::core::sync::atomic::Ordering) -> #ident {
             Self::from_usize(self.0.load(order))
         }
     }
@@ -206,7 +206,7 @@ fn atomic_enum_store(ident: &Ident) -> TokenStream2 {
         /// # Panics
         ///
         /// Panics if order is `Acquire` or `AcqRel`.
-        pub fn store(&self, val: #ident, order: core::sync::atomic::Ordering) {
+        pub fn store(&self, val: #ident, order: ::core::sync::atomic::Ordering) {
             self.0.store(Self::to_usize(val), order)
         }
     }
@@ -219,7 +219,7 @@ fn atomic_enum_swap(ident: &Ident) -> TokenStream2 {
         /// `swap` takes an `Ordering` argument which describes the memory ordering of this operation.
         /// All ordering modes are possible. Note that using `Acquire` makes the store part of this operation `Relaxed`,
         /// and using `Release` makes the load part `Relaxed`.
-        pub fn swap(&self, val: #ident, order: core::sync::atomic::Ordering) -> #ident {
+        pub fn swap(&self, val: #ident, order: ::core::sync::atomic::Ordering) -> #ident {
             Self::from_usize(self.0.swap(Self::to_usize(val), order))
         }
     }
@@ -241,9 +241,9 @@ fn atomic_enum_compare_exchange(ident: &Ident) -> TokenStream2 {
             &self,
             current: #ident,
             new: #ident,
-            success: core::sync::atomic::Ordering,
-            failure: core::sync::atomic::Ordering
-        ) -> Result<#ident, #ident> {
+            success: ::core::sync::atomic::Ordering,
+            failure: ::core::sync::atomic::Ordering
+        ) -> ::core::result::Result<#ident, #ident> {
             self.0
                 .compare_exchange(
                     Self::to_usize(current),
@@ -274,9 +274,9 @@ fn atomic_enum_compare_exchange_weak(ident: &Ident) -> TokenStream2 {
             &self,
             current: #ident,
             new: #ident,
-            success: core::sync::atomic::Ordering,
-            failure: core::sync::atomic::Ordering
-        ) -> Result<#ident, #ident> {
+            success: ::core::sync::atomic::Ordering,
+            failure: ::core::sync::atomic::Ordering
+        ) -> ::core::result::Result<#ident, #ident> {
             self.0
                 .compare_exchange_weak(
                     Self::to_usize(current),
@@ -302,9 +302,9 @@ fn from_impl(ident: &Ident, atomic_ident: &Ident) -> TokenStream2 {
 
 fn debug_impl(atomic_ident: &Ident) -> TokenStream2 {
     quote! {
-        impl core::fmt::Debug for #atomic_ident {
-            fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
-                self.load(core::sync::atomic::Ordering::SeqCst).fmt(f)
+        impl ::core::fmt::Debug for #atomic_ident {
+            fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+                ::core::fmt::Debug::fmt(&self.load(::core::sync::atomic::Ordering::SeqCst), f)
             }
         }
     }
