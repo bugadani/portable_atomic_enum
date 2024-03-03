@@ -82,7 +82,9 @@ This type uses an `AtomicUsize` to store the enum value.
 }
 
 fn enum_to_usize(ident: &Ident) -> TokenStream2 {
+    let to_usize_docs = format!("Converts the `{ident}` variant to a `usize`.");
     quote! {
+        #[doc = #to_usize_docs]
         const fn to_usize(val: #ident) -> usize {
             val as usize
         }
@@ -90,30 +92,18 @@ fn enum_to_usize(ident: &Ident) -> TokenStream2 {
 }
 
 fn enum_from_usize(ident: &Ident, variants: impl IntoIterator<Item = Variant>) -> TokenStream2 {
-    let variants_with_const_names: Vec<_> = variants
+    let from_usize_docs = format!("Converts the `usize` to a `{ident}` variant.");
+
+    let variants = variants
         .into_iter()
         .map(|v| v.ident)
-        .map(|id| {
-            let c_id = Ident::new(&format!("USIZE_{}", &id), id.span());
-            (id, c_id)
-        })
-        .collect();
-
-    let variant_consts = variants_with_const_names
-        .iter()
-        .map(|(id, c_id)| quote! { const #c_id: usize = #ident::#id as usize; });
-
-    let variants_back = variants_with_const_names
-        .iter()
-        .map(|(id, c_id)| quote! { #c_id => #ident::#id, });
+        .map(|id| quote! { v if v == #ident::#id as usize => #ident::#id, });
 
     quote! {
+        #[doc = #from_usize_docs]
         fn from_usize(val: usize) -> #ident {
-            #![allow(non_upper_case_globals)]
-            #(#variant_consts)*
-
             match val {
-                #(#variants_back)*
+                #(#variants)*
                 _ => panic!("Invalid enum discriminant"),
             }
         }
