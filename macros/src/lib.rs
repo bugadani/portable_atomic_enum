@@ -45,8 +45,8 @@
 
 use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
-use quote::{quote, quote_spanned};
-use syn::{parse_macro_input, spanned::Spanned, Attribute, Ident, ItemEnum, Variant, Visibility};
+use quote::quote;
+use syn::{parse_macro_input, Attribute, Ident, ItemEnum, Variant, Visibility};
 
 fn enum_definition<'a>(
     attrs: impl IntoIterator<Item = Attribute>,
@@ -67,12 +67,9 @@ fn enum_definition<'a>(
 
 fn atomic_enum_definition(vis: &Visibility, ident: &Ident, atomic_ident: &Ident) -> TokenStream2 {
     let atomic_ident_docs = format!(
-        "A wrapper around [`{0}`] which can be safely shared between threads.
+        "A wrapper around [`{ident}`] which can be safely shared between threads.
 
-This type uses an `AtomicUsize` to store the enum value.
-
-[`{0}`]: enum.{0}.html",
-        ident
+This type uses an `AtomicUsize` to store the enum value.",
     );
 
     quote! {
@@ -82,7 +79,7 @@ This type uses an `AtomicUsize` to store the enum value.
 }
 
 fn enum_to_usize(ident: &Ident) -> TokenStream2 {
-    let to_usize_docs = format!("Converts the `{ident}` variant to a `usize`.");
+    let to_usize_docs = format!("Converts the [`{ident}`] variant to a `usize`.");
     quote! {
         #[doc = #to_usize_docs]
         const fn to_usize(val: #ident) -> usize {
@@ -92,7 +89,7 @@ fn enum_to_usize(ident: &Ident) -> TokenStream2 {
 }
 
 fn enum_from_usize(ident: &Ident, variants: impl IntoIterator<Item = Variant>) -> TokenStream2 {
-    let from_usize_docs = format!("Converts the `usize` to a `{ident}` variant.");
+    let from_usize_docs = format!("Converts the `usize` to a [`{ident}`] variant.");
 
     let variants = variants
         .into_iter()
@@ -111,12 +108,7 @@ fn enum_from_usize(ident: &Ident, variants: impl IntoIterator<Item = Variant>) -
 }
 
 fn atomic_enum_new(ident: &Ident, atomic_ident: &Ident) -> TokenStream2 {
-    let atomic_ident_docs = format!(
-        "Creates a new atomic [`{0}`].
-
-[`{0}`]: enum.{0}.html",
-        ident
-    );
+    let atomic_ident_docs = format!("Creates a new atomic [`{ident}`].");
 
     quote! {
         #[doc = #atomic_ident_docs]
@@ -348,17 +340,16 @@ pub fn atomic_enum(args: TokenStream, input: TokenStream) -> TokenStream {
 
     // We only support C-style enums: No generics, no fields
     if !generics.params.is_empty() {
-        let span = generics.span();
-        let err = quote_spanned! {span=> compile_error!("Expected an enum without generics."); };
-        return err.into();
+        return syn::Error::new_spanned(generics, "Expected an enum without generics.")
+            .into_compile_error()
+            .into();
     }
 
     for variant in variants.iter() {
         if !matches!(variant.fields, syn::Fields::Unit) {
-            let span = variant.fields.span();
-            let err =
-                quote_spanned! {span=> compile_error!("Expected a variant without fields."); };
-            return err.into();
+            return syn::Error::new_spanned(&variant.fields, "Expected a variant without fields.")
+                .into_compile_error()
+                .into();
         }
     }
 
